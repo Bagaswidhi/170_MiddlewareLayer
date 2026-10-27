@@ -13,3 +13,8 @@ const pool = new Pool({
   password: 'bagas3005',
   port: 5432
 });
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// MIDDLEWARE
