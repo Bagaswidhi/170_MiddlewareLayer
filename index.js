@@ -64,7 +64,7 @@ const idSchema = Joi.object({
     id : Joi.number().integer().positive().required()
 })
 
-function validate(schema){
+function validateBody(schema){
     return (req,res,next) => {
         const { error } = schema.validate(req.body, {
             abortEarly: false,
@@ -124,7 +124,7 @@ app.get('/', async (req,res) => {
 // METHOD POST
 app.post(
     '/biodata',
-    validate(biodataSchema),
+    validateBody(biodataSchema),
     async (req,res) => {
         const { id, nama, nim, kelas } = req.body;
         const result = await pool.query(
@@ -175,3 +175,23 @@ app.delete(
         return successResponse(res, 'Data berhasil dihapus', result.rows[0]);
     }
 );
+
+// GLOBAR ERROR HANDLER
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+
+    if(res.headersSent){
+        return next(err);
+    }
+
+    return errorResponse(
+        res,
+        'Terjadi Kesalahan pada server',
+        500,
+        err.message
+    )
+});
+
+app.listen(port, () => {
+    console.log(`Server berjalan di http://localhost:${port}`);
+});
