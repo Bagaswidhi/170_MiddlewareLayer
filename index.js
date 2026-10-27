@@ -63,3 +63,13 @@ const biodataSchema = Joi.object({
 const idSchema = Joi.object({
     id : Joi.number().integer().positive().required()
 })
+
+function validate(schema){
+    return (req,res,next) => {
+        const { error } = schema.validate(req.body, {
+            abortEarly: false,
+            convert: true,
+            allowUnknown: false,
+        });
+    };
+}
