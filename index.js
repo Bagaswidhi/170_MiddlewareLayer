@@ -66,7 +66,7 @@ const idSchema = Joi.object({
 
 function validateBody(schema){
     return (req,res,next) => {
-        const { error } = schema.validate(req.body, {
+        const { error, value } = schema.validate(req.body, {
             abortEarly: false,
             convert: true,
             allowUnknown: false,
@@ -77,7 +77,7 @@ function validateBody(schema){
                 res,
                 'Validasi input gagal',
                 400,
-                error,details.map(item => ({
+                error.details.map(item => ({
                     field: item.path.join('.'),
                     message: item.message,
                 }))
@@ -129,7 +129,7 @@ app.post(
         const { id, nama, nim, kelas } = req.body;
         const result = await pool.query(
             'INSERT INTO biodata (id, nama, nim, kelas) VALUES ($1, $2, $3, $4) RETURNING *',
-            [id ?? null, nama, nim, kelas]
+            [id, nama, nim, kelas]
         );
         return successResponse(res, 'Data berhasil ditambahkan', result.rows[0], 201);
     }
