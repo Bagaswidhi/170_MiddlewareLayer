@@ -89,7 +89,7 @@ function validateBody(schema){
 }
 
 // MIDDLEWARE VALIDATION PARAMETER
-function validateParams(schema, name){
+function validateParams(schema){
     return (req,res,next) => {
         const { error, value } = schema.validate(req.params, {
             abortEarly: false,
